@@ -140,10 +140,9 @@ Custom property | Description | Default
        :host paper-radio-button {
         text-align: center;
         position: absolute;
-        width: 49.5%;
         padding-left: 0;
         padding-right: 0;
-        @apply(--mdb-dimension-finder-radio-button)
+        width: 49.5%;
       }
 
        :host paper-radio-button:last-child {
@@ -174,24 +173,24 @@ Custom property | Description | Default
         <template>
           <paper-item>
             <paper-checkbox checked="{{item.checked}}"></paper-checkbox>
-            <template is="dom-if" if="[[showSystemRecommendation]]">
+            <template is="dom-if" if="[[item.showSystemRecommendation]]">
               <span class="bulb icon">
                 <template is="dom-if" if="{{item.systemRecommended}}">
                     <iron-icon icon="icons:lightbulb-outline" item-icon></iron-icon>
                 </template>
             </span>
             </template>
-            <template is="dom-if" if="[[showHumanVerification]]">
+            <template is="dom-if" if="[[item.showHumanVerification]]">
               <span class="face icon">
-                <template is="dom-if" if="{{item.humanVerified}}">
+                <template is="dom-if" if="[[item.humanVerified]]">
                     <iron-icon icon="icons:face"></iron-icon>
                 </template>
             </span>
             </template>
-            <span class="item-name" title="{{item.name}}">{{item.name}}</span>
-            <template is="dom-if" if="[[showSystemRecommendation]]">
-              <template is="dom-if" if="{{item.recommendation}}">
-                <span class="recommendation">{{item.recommendation}}</span>
+            <span class="item-name" title="[[item.name]]">[[item.name]]</span>
+            <template is="dom-if" if="[[item.showSystemRecommendation]]">
+              <template is="dom-if" if="[[item.recommendation]]">
+                <span class="recommendation">[[item.recommendation]]</span>
               </template>
             </template>
             <iron-icon class="arrow" icon="icons:chevron-right"></iron-icon>
@@ -308,10 +307,12 @@ Custom property | Description | Default
       },
 
       _sortDimension: function () {
+        var that = this;
         var sortBy = this.sortBy;
-        var items = !this.showAllDimensions ? this.items.filter(function (e) {
+        var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
           return e.systemRecommended;
-        }) : this.items;
+        }) : this.items));
+
         var sorted = sortBy === 'recommendation' ? items.sort(function (a, b) {
           return (b.recommendation || 0) - (a.recommendation || 0);
         }) : this.items.sort(function (a, b) {
@@ -320,7 +321,11 @@ Custom property | Description | Default
           return 0;
         });
 
-        this.set('_searchResults', JSON.parse(JSON.stringify(sorted)));
+        this.set('_searchResults', JSON.parse(JSON.stringify(sorted.map(function (e) {
+          e.showHumanVerification = that.showHumanVerification;
+          e.showSystemRecommendation = that.showSystemRecommendation;
+          return e;
+        }))));
         this.emptyMessage = this.dataLoaded ? !sorted.length ? 'No ' + (!this.showAllDimensions ? 'system recommended ' : '') + this.dimension + 's found.' : '' : '';
       }
     });
