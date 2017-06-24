@@ -9,6 +9,7 @@
 <link rel="import" href="../mdb-title/mdb-title.html">
 <link rel="import" href="../mdb-simple-list/mdb-simple-list.html">
 <link rel="import" href="../mdb-search-box/mdb-search-box.html">
+<link rel="import" href="mdb-dimension-finder-item.html">
 
 <!--
 `mdb-dimension-finder`
@@ -66,49 +67,6 @@ Custom property | Description | Default
           position: relative;
           width: 100%;
         }
-      }
-
-       :host paper-item .icon {
-        display: inline-block;
-        width: 1.5em;
-      }
-
-       :host paper-item iron-icon.arrow {
-        display: none;
-      }
-
-       :host paper-item .recommendation {
-        display: inline-block;
-        position: absolute;
-        right: 30px;
-        top: 50%;
-        transform: translate(0, -50%);
-      }
-
-       :host paper-item[aria-selected="true"] iron-icon.arrow {
-        display: inline-block;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translate(0, -50%);
-        color: #fff;
-      }
-
-       :host .item-name {
-        max-width: 199px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        @apply(--mdb-dimension-finder-list-item-text);
-      }
-
-       :host iron-icon {
-        width: 15px;
-        height: 15px;
-      }
-
-       :host .face {
-        padding-right: 3px;
       }
 
        :host .dimension-finder {
@@ -172,28 +130,9 @@ Custom property | Description | Default
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="{{emptyMessage}}">
         <template>
           <paper-item>
-            <paper-checkbox checked="{{item.checked}}"></paper-checkbox>
-            <template is="dom-if" if="[[item.showSystemRecommendation]]">
-              <span class="bulb icon">
-                <template is="dom-if" if="{{item.systemRecommended}}">
-                    <iron-icon icon="icons:lightbulb-outline" item-icon></iron-icon>
-                </template>
-            </span>
-            </template>
-            <template is="dom-if" if="[[item.showHumanVerification]]">
-              <span class="face icon">
-                <template is="dom-if" if="[[item.humanVerified]]">
-                    <iron-icon icon="icons:face"></iron-icon>
-                </template>
-            </span>
-            </template>
-            <span class="item-name" title="[[item.name]]">[[item.name]]</span>
-            <template is="dom-if" if="[[item.showSystemRecommendation]]">
-              <template is="dom-if" if="[[item.recommendation]]">
-                <span class="recommendation">[[item.recommendation]]</span>
-              </template>
-            </template>
-            <iron-icon class="arrow" icon="icons:chevron-right"></iron-icon>
+            <mdb-dimension-finder-item name="[[item.name]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
+              show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.recommendation]]" human-verified="[[item.humanVerified]]"
+              system-recommended="[[item.systemRecommended]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
           </paper-item>
         </template>
       </mdb-simple-list>
@@ -218,6 +157,11 @@ Custom property | Description | Default
         },
 
         allowSorting: {
+          type: Boolean,
+          value: false
+        },
+
+        showItemCheckbox: {
           type: Boolean,
           value: false
         },
@@ -289,7 +233,24 @@ Custom property | Description | Default
         var list = this.querySelector('mdb-simple-list');
         if (list) {
           list.addEventListener('selected-item-changed', function () {
+            var selected = this.selected;
+            var items = that.querySelectorAll('mdb-dimension-finder-item');
+
+            if (items && items.length > 0) {
+              items.forEach(function (item, index) {
+                if (index == selected) {
+                  Polymer.dom(item).setAttribute('selected', true);
+                } else { 
+                  Polymer.dom(item).removeAttribute('selected');
+                }
+              });
+            }
             that.selectedDimension = this.selectedItem;
+          });
+          list.addEventListener('dimension-checked', function (e) {
+            var args = e.detail || {};
+            args.dimension = that.dimension;
+            that.fire('dimension-checked', args);
           });
         }
       },
@@ -315,7 +276,7 @@ Custom property | Description | Default
 
         var sorted = sortBy === 'recommendation' ? items.sort(function (a, b) {
           return (b.recommendation || 0) - (a.recommendation || 0);
-        }) : this.items.sort(function (a, b) {
+        }) : items.sort(function (a, b) {
           if (a.name < b.name) return -1;
           if (a.name > b.name) return 1;
           return 0;
@@ -324,6 +285,7 @@ Custom property | Description | Default
         this.set('_searchResults', JSON.parse(JSON.stringify(sorted.map(function (e) {
           e.showHumanVerification = that.showHumanVerification;
           e.showSystemRecommendation = that.showSystemRecommendation;
+          e.showItemCheckbox = that.showItemCheckbox;
           return e;
         }))));
         this.emptyMessage = this.dataLoaded ? !sorted.length ? 'No ' + (!this.showAllDimensions ? 'system recommended ' : '') + this.dimension + 's found.' : '' : '';

@@ -1,0 +1,144 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+
+<dom-module id="mdb-dimension-finder-item">
+    <template>
+        <style>
+             :host {
+                --align-middle: {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                --paper-checkbox-unchecked-color:currentColor;
+            }
+
+             :host .item-name {
+                width: 200px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                @apply(--align-middle);
+                @apply(--mdb-dimension-finder-list-item-text);
+            }
+
+             :host .recommendation {
+                position: absolute;
+                right: var(--standard-padding, 20px);
+                top: 50%;
+                transform: translate(0, -50%);
+            }
+
+             :host .icon {
+                @apply(--align-middle);
+                width: 1.5em;
+            }
+
+             :host iron-icon {
+                width: 15px;
+                height: 15px;
+            }
+
+             :host .face {
+                padding-right: 3px;
+            }
+
+             :host iron-icon.arrow {
+                display: none;
+            }
+
+             :host[selected] iron-icon.arrow {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translate(0, -50%);
+                display: block;
+            }
+        </style>
+        <template is="dom-if" if="[[showItemCheckbox]]">
+            <paper-checkbox checked="{{checked}}"></paper-checkbox>
+        </template>
+        <template is="dom-if" if="[[showSystemRecommendation]]">
+            <span class="bulb icon">
+                <template is="dom-if" if="{{systemRecommended}}">
+                    <iron-icon icon="icons:lightbulb-outline" item-icon></iron-icon>
+                </template>
+            </span>
+        </template>
+        <template is="dom-if" if="[[showHumanVerification]]">
+            <span class="face icon">
+                <template is="dom-if" if="[[humanVerified]]">
+                    <iron-icon icon="icons:face"></iron-icon>
+                </template>
+            </span>
+        </template>
+        <span class="item-name" title="[[name]]">[[name]]</span>
+        <template is="dom-if" if="[[showSystemRecommendation]]">
+            <template is="dom-if" if="[[recommendation]]">
+                <span class="recommendation">[[recommendation]]</span>
+            </template>
+        </template>
+        <iron-icon class="arrow" icon="icons:chevron-right"></iron-icon>
+    </template>
+    <script>
+        Polymer({
+            is: 'mdb-dimension-finder-item',
+
+            properties: {
+                name: {
+                    type: String
+                },
+
+                systemRecommended: {
+                    type: Boolean,
+                    value: false
+                },
+
+                humanVerified: {
+                    type: Boolean,
+                    value: false
+                },
+
+                recommendation: {
+                    type: Number,
+                    value: 0
+                },
+
+                showItemCheckbox: {
+                    type: Boolean,
+                    value: false
+                },
+
+                showSystemRecommendation: {
+                    type: Boolean,
+                    value: false
+                },
+
+                showHumanVerification: {
+                    type: Boolean,
+                    value: false
+                },
+
+                checked: {
+                    type: Boolean,
+                    value: false,
+                    observer: '_checkedChanged'
+                }
+            },
+
+            _checkedChanged: function (checked) {
+                this.fire('dimension-checked', {
+                    checked: checked,
+                    name: this.name,
+                    humanVerified: this.humanVerified,
+                    showHumanVerification: this.showHumanVerification,
+                    systemRecommended: this.systemRecommended,
+                    showSystemRecommendation: this.showSystemRecommendation,
+                    showItemCheckbox: this.showItemCheckbox,
+                    recommendation: this.recommendation
+                });
+            }
+        });
+    </script>
+</dom-module>
