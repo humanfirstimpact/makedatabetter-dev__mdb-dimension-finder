@@ -126,7 +126,7 @@ Custom property | Description | Default
       </mdb-radio-list>
     </template>
     <div class="dimension-finder">
-      <mdb-search-box placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="name" source="{{items}}" search-results="{{_searchResults}}"></mdb-search-box>
+      <mdb-search-box placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="name" source="[[_items]]" search-results="{{_searchResults}}"></mdb-search-box>
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="{{emptyMessage}}">
         <template>
           <paper-item>
@@ -192,6 +192,12 @@ Custom property | Description | Default
           observer: '_itemsChanged'
         },
 
+        _items: {
+          type: Array,
+          value: [],
+          readOnly: true
+        },
+
         _searchResults: {
           type: Array,
           value: []
@@ -240,7 +246,7 @@ Custom property | Description | Default
               items.forEach(function (item, index) {
                 if (index == selected) {
                   Polymer.dom(item).setAttribute('selected', true);
-                } else { 
+                } else {
                   Polymer.dom(item).removeAttribute('selected');
                 }
               });
@@ -256,6 +262,13 @@ Custom property | Description | Default
       },
 
       _itemsChanged: function () {
+        var that = this;
+        this._set_items(this.items.map(function (e) {
+          e.showHumanVerification = that.showHumanVerification;
+          e.showSystemRecommendation = that.showSystemRecommendation;
+          e.showItemCheckbox = that.showItemCheckbox;
+          return e;
+        }));
         this._sortDimension();
       },
 
@@ -282,12 +295,7 @@ Custom property | Description | Default
           return 0;
         });
 
-        this.set('_searchResults', JSON.parse(JSON.stringify(sorted.map(function (e) {
-          e.showHumanVerification = that.showHumanVerification;
-          e.showSystemRecommendation = that.showSystemRecommendation;
-          e.showItemCheckbox = that.showItemCheckbox;
-          return e;
-        }))));
+        this.set('_searchResults', JSON.parse(JSON.stringify(sorted)));
         this.emptyMessage = this.dataLoaded ? !sorted.length ? 'No ' + (!this.showAllDimensions ? 'system recommended ' : '') + this.dimension + 's found.' : '' : '';
       }
     });
