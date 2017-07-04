@@ -57,7 +57,7 @@
             }
         </style>
         <template is="dom-if" if="[[showItemCheckbox]]">
-            <paper-checkbox checked="{{checked}}"></paper-checkbox>
+            <paper-checkbox on-change="_checkedChanged"></paper-checkbox>
         </template>
         <template is="dom-if" if="[[showSystemRecommendation]]">
             <span class="bulb icon">
@@ -122,14 +122,14 @@
 
                 checked: {
                     type: Boolean,
-                    value: false,
-                    observer: '_checkedChanged'
+                    value: false
                 }
             },
 
-            _checkedChanged: function (checked) {
+            _checkedChanged: function (e) {
+                this.checked = e.currentTarget.checked;
                 this.fire('dimension-checked', {
-                    checked: checked,
+                    checked: this.checked,
                     name: this.name,
                     humanVerified: this.humanVerified,
                     showHumanVerification: this.showHumanVerification,
