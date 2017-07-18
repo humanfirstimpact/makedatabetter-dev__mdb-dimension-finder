@@ -36,17 +36,8 @@ Custom property | Description | Default
     <style>
        :host {
         display: inline-block;
-        --mdb-search-box-container: {
-          padding-bottom: 0;
-          margin: var(--standard-padding, 20px);
-          @apply(--mdb-dimension-finder-searchbox-container);
-        }
-        --mdb-search-box: {
-          font-size: 1em;
-          @apply(--mdb-dimension-finder-searchbox);
-        }
         --mdb-title: {
-          font-weight: 400;
+          font-size: 1.5em;
         }
         --mdb-list-item: {
           font-size: 1em;
@@ -60,7 +51,6 @@ Custom property | Description | Default
           margin-right: var(--standard-padding, 20px);
           text-align: justify;
           font-family: Roboto;
-          color: #9a9a9a;
           position: absolute;
         }
         --mdb-radio-list-container: {
@@ -70,7 +60,7 @@ Custom property | Description | Default
       }
 
        :host .dimension-finder {
-        border: 1px solid #dee7ec;
+        border: 1px solid var(--mdb-border-color, #000);
         overflow: auto;
       }
 
