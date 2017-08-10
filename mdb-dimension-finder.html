@@ -119,7 +119,7 @@ Custom property | Description | Default
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="{{emptyMessage}}">
         <template>
           <paper-item>
-            <mdb-dimension-finder-item name="[[item.name]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
+            <mdb-dimension-finder-item name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
               show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.recommendation]]" human-verified="[[item.humanVerified]]"
               system-recommended="[[item.systemRecommended]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
           </paper-item>
