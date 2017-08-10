@@ -120,7 +120,7 @@ Custom property | Description | Default
         <template>
           <paper-item>
             <mdb-dimension-finder-item name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
-              show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.recommendation]]" human-verified="[[item.humanVerified]]"
+              show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.relevance]]" human-verified="[[item.humanVerified]]"
               system-recommended="[[item.systemRecommended]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
           </paper-item>
         </template>
@@ -277,7 +277,7 @@ Custom property | Description | Default
         }) : this.items));
 
         var sorted = sortBy === 'recommendation' ? items.sort(function (a, b) {
-          return (b.recommendation || 0) - (a.recommendation || 0);
+          return (b.relevance || 0) - (a.relevance || 0);
         }) : items.sort(function (a, b) {
           if (a.name < b.name) return -1;
           if (a.name > b.name) return 1;
