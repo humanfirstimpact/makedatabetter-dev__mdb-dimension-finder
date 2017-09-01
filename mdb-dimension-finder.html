@@ -281,8 +281,8 @@ Custom property | Description | Default
         var sorted = sortBy === 'recommendation' ? items.sort(function (a, b) {
           return (b.predictedColumns || 0) - (a.predictedColumns || 0);
         }) : items.sort(function (a, b) {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
+          if (a.label < b.label) return -1;
+          if (a.label > b.label) return 1;
           return 0;
         });
 
