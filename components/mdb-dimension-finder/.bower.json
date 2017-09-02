@@ -18,11 +18,11 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/makedatabetter-dev/mdb-dimension-finder",
-  "_release": "caa756cdd1",
+  "_release": "91a6adf8a0",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "caa756cdd16a8c530da311bae29e87496dc61ed2"
+    "commit": "91a6adf8a01b0bfed1dd0502e66172564389f090"
   },
   "_source": "https://github.com/makedatabetter-dev/mdb-dimension-finder.git",
   "_target": "master",
