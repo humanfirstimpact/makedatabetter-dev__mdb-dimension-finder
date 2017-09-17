@@ -57,7 +57,7 @@
             }
         </style>
         <template is="dom-if" if="[[showItemCheckbox]]">
-            <paper-checkbox on-change="_checkedChanged"></paper-checkbox>
+            <paper-checkbox checked="{{this.checked}}" on-change="_checkedChanged"></paper-checkbox>
         </template>        
         <template is="dom-if" if="[[showHumanVerification]]">
             <span class="face icon">
