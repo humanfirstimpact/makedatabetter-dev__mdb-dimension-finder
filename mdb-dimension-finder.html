@@ -121,7 +121,7 @@ Custom property | Description | Default
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]">
         <template>
           <paper-item>
-            <mdb-dimension-finder-item name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
+            <mdb-dimension-finder-item id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
               show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]"
               system-recommended="[[item.predictedColumns]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
           </paper-item>
@@ -218,6 +218,17 @@ Custom property | Description | Default
           type: Boolean,
           value: false
         }
+      },
+
+      uncheckItems : function(itemIds){
+        if((itemIds || []).length == 0)
+          return;
+
+        var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
+        .forEach(function(itemElement){
+          if(itemIds.indexOf(itemElement.id) >= 0)
+            itemElement.checked = false;
+        });
       },
 
       ready: function () {

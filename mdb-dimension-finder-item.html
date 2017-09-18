@@ -57,7 +57,7 @@
             }
         </style>
         <template is="dom-if" if="[[showItemCheckbox]]">
-            <paper-checkbox checked="{{this.checked}}" on-change="_checkedChanged"></paper-checkbox>
+            <paper-checkbox checked={{checked}} on-change="_checkedChanged"></paper-checkbox>
         </template>        
         <template is="dom-if" if="[[showHumanVerification]]">
             <span class="face icon">
@@ -79,6 +79,10 @@
             is: 'mdb-dimension-finder-item',
 
             properties: {
+                id: {
+                    type: String
+                },
+                
                 name: {
                     type: String
                 },
@@ -122,6 +126,7 @@
             _checkedChanged: function (e) {
                 this.checked = e.currentTarget.checked;
                 this.fire('dimension-checked', {
+                    id : this.id,
                     checked: this.checked,
                     name: this.name,
                     humanVerified: this.humanVerified,
