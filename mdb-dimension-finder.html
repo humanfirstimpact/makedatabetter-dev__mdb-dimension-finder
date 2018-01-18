@@ -35,7 +35,7 @@ Custom property | Description | Default
 <dom-module id="mdb-dimension-finder">
   <template>
     <style>
-       :host {
+      :host {
         display: inline-block;
         --mdb-title: {
           font-size: 1.5em;
@@ -55,51 +55,49 @@ Custom property | Description | Default
           position: absolute;
         }
         --mdb-radio-list-container: {
-          position: relative;
-          width: 100%;
+          @apply(--layout-horizontal);
+        }
+        --mdb-search-box-container: {
+          margin: 10px;
         }
         @apply(--paper-font-common-base);
       }
 
-       :host .dimension-finder {
+      :host .dimension-finder {
         border: 1px solid var(--mdb-border-color, #000);
         overflow: auto;
       }
 
-       :host[allow-sorting] .dimension-finder {
+      :host[allow-sorting] .dimension-finder {
         border-top: 0;
       }
 
-       :host .dimension-finder mdb-simple-list {
+      :host .dimension-finder mdb-simple-list {
         min-height: 4em;
         @apply(--mdb-dimension-finder-list)
       }
 
-       :host .header {
+      :host .header {
         position: relative;
         @apply(--mdb-dimension-finder-header-container);
       }
 
-       :host .header paper-checkbox {
+      :host .header paper-checkbox {
         position: absolute;
         right: 0;
         top: 50%;
         transform: translate(0, -50%);
       }
 
-       :host paper-radio-button {
+      :host paper-radio-button {
         text-align: center;
-        padding-left: 0;
-        padding-right: 0;
-        width: 49.5%;
+        flex: 1 1 50%;
+        padding: 8px 5px;
+        box-sizing: border-box;
       }
 
-       :host paper-radio-button:last-child {
+      :host paper-radio-button:last-child {
         right: 0;
-      }
-
-       :host mdb-search-box {
-        margin-top: 20px;
       }
     </style>
 
@@ -112,7 +110,7 @@ Custom property | Description | Default
 
     <template is="dom-if" if="[[allowSorting]]">
       <mdb-radio-list size="small" selected="{{sortBy}}">
-        <paper-radio-button name="alphabetically">All</paper-radio-button>
+        <paper-radio-button name="alphabetically">ALL</paper-radio-button>
         <paper-radio-button name="recommendation">RECOMMENDED</paper-radio-button>
       </mdb-radio-list>
     </template>
@@ -120,9 +118,9 @@ Custom property | Description | Default
       <mdb-search-box placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]" search-results="{{_searchResults}}"></mdb-search-box>
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]">
         <template>
-            <mdb-dimension-finder-item id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
-              show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]"
-              system-recommended="[[item.predictedColumns]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
+          <mdb-dimension-finder-item id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
+            show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]"
+            system-recommended="[[item.predictedColumns]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
         </template>
       </mdb-simple-list>
     </div>
@@ -218,15 +216,15 @@ Custom property | Description | Default
         }
       },
 
-      uncheckItems : function(itemIds){
-        if((itemIds || []).length == 0)
+      uncheckItems: function (itemIds) {
+        if ((itemIds || []).length == 0)
           return;
 
         var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
-        .forEach(function(itemElement){
-          if(itemIds.indexOf(itemElement.id) >= 0)
-            itemElement.checked = false;
-        });
+          .forEach(function (itemElement) {
+            if (itemIds.indexOf(itemElement.id) >= 0)
+              itemElement.checked = false;
+          });
       },
 
       ready: function () {
@@ -277,10 +275,10 @@ Custom property | Description | Default
       },
 
       _sortDimension: function () {
-        
+
         var that = this;
         var sortBy = this.sortBy;
-        this.showAllDimensions = sortBy === 'recommendation'? false: true;
+        this.showAllDimensions = sortBy === 'recommendation' ? false : true;
         var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
           return !!e.predictedColumns;
         }) : this.items));
