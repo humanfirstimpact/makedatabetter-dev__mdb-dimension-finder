@@ -106,25 +106,23 @@ Custom property | Description | Default
     <div class="header">
       <mdb-title help-text="[[helpText]]" level="3">[[dimension]]</mdb-title>
       <template is="dom-if" if="[[allDimensionsAllowed]]">
-        <paper-checkbox checked="{{showAllDimensions}}">ALL</paper-checkbox>
+        <paper-checkbox hidden checked="{{showAllDimensions}}">ALL</paper-checkbox>
       </template>
     </div>
 
     <template is="dom-if" if="[[allowSorting]]">
       <mdb-radio-list size="small" selected="{{sortBy}}">
-        <paper-radio-button name="alphabetically">ALPHABETICALLY</paper-radio-button>
-        <paper-radio-button name="recommendation">BY RECOMMENDATION</paper-radio-button>
+        <paper-radio-button name="alphabetically">All</paper-radio-button>
+        <paper-radio-button name="recommendation">RECOMMENDED</paper-radio-button>
       </mdb-radio-list>
     </template>
     <div class="dimension-finder">
       <mdb-search-box placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]" search-results="{{_searchResults}}"></mdb-search-box>
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]">
         <template>
-          <paper-item>
             <mdb-dimension-finder-item id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
               show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]"
               system-recommended="[[item.predictedColumns]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
-          </paper-item>
         </template>
       </mdb-simple-list>
     </div>
@@ -279,18 +277,16 @@ Custom property | Description | Default
       },
 
       _sortDimension: function () {
+        
         var that = this;
         var sortBy = this.sortBy;
+        this.showAllDimensions = sortBy === 'recommendation'? false: true;
         var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
           return !!e.predictedColumns;
         }) : this.items));
 
-        var sorted = sortBy === 'recommendation' ? items.sort(function (a, b) {
+        var sorted = items.sort(function (a, b) {
           return (b.predictedColumns || 0) - (a.predictedColumns || 0);
-        }) : items.sort(function (a, b) {
-          if (a.label < b.label) return -1;
-          if (a.label > b.label) return 1;
-          return 0;
         });
 
         this.set('_searchResults', JSON.parse(JSON.stringify(sorted)));
