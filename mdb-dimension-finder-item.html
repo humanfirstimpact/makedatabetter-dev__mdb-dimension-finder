@@ -9,7 +9,7 @@
              :host{
                  @apply(--layout-horizontal);
                  @apply(--layout-center);
-                 padding: 5px 0;
+                 padding: 5px 5px 5px 9px;
                  cursor: pointer;
              }
 
@@ -54,17 +54,16 @@
                  height:20px;
              }
         </style>
-        <span class="icon">
-            <template is="dom-if" if="[[showHumanVerification]]">
-            <template is="dom-if" if="[[humanVerified]]">
-                <iron-icon icon="icons:face"></iron-icon>
-            </template>
-            <template is="dom-if" if="[[!humanVerified]]">
-                <iron-icon icon="icon"></iron-icon>
-            </template>
+        <template is="dom-if" if="[[showHumanVerification]]">
+            <span class="icon">
+                <template is="dom-if" if="[[humanVerified]]">
+                    <iron-icon icon="icons:face"></iron-icon>
+                </template>
+                <template is="dom-if" if="[[!humanVerified]]">
+                    <iron-icon icon="icon"></iron-icon>
+                </template>
+            </span> 
         </template>
-
-        </span>     
 
         <template is="dom-if" if="[[!showHumanVerification]]">
             <iron-icon icon="icon"></iron-icon>
