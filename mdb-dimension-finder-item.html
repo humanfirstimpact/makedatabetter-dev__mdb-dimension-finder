@@ -6,53 +6,61 @@
 <dom-module id="mdb-dimension-finder-item">
     <template>
         <style>
-             :host{
-                 @apply(--layout-horizontal);
-                 @apply(--layout-center);
-                 padding: 5px 5px 5px 9px;
-                 cursor: pointer;
-             }
-
-             :host[selected]{
-                 background: var(--dimension-bg-color,--app-primary-color);
-                 color: white;
-             }
-
-             :host[selected] paper-button{
-                 border-color: white;
-                 color: white;
-             }
-             :host[checked] paper-button{
-                 border-color: var(--dimension-bg-color,--app-primary-color);
-                 color: var(--dimension-bg-color,--app-primary-color);
-                 background: white;
-             }
-             :host {
-                --paper-button:{
+            :host {
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+                padding: 5px 5px 5px 9px;
+                cursor: pointer;
+                color: var(--dimension-text-color, --mdb-secondary-text-dark);
+        
+            }
+        
+            :host[selected] {
+                background: var(--dimension-selected-bg, #fff);
+                color: var(--dimension-selected-color, --app-primary-color);
+                @apply(--dimension-selected-text);
+            }
+        
+            :host[selected] paper-button {
+                color: var(--dimension-text-color, --mdb-secondary-text-dark);
+                @apply(--dimension-selected-button);
+            }
+        
+            :host[checked] paper-button {
+                border-color: var(--dimension-checked-color, --app-primary-color);
+                color: var(--dimension-checked-color, --app-primary-color);
+                @apply(--dimension-checked-button);
+            }
+        
+            :host {
+                --paper-button: {
                     min-width: 20px;
-                    min-height:20px;
+                    min-height: 20px;
                     background: transparent;
-                    color: var(--dimension-bg-color,--app-primary-color);
                     border-radius: 10px;
                     padding: 2px 13px;
                     box-sizing: border-box;
-                    border:1px solid var(--dimension-bg-color,--app-primary-color);
+                    border: 1px solid var(--dimension-text-color, --mdb-secondary-text-dark);
                 }
-             }
-             :host[empty-recommendation] paper-button {
-                    padding: 0;
-             }
-             .item-name{
+            }
+        
+            :host[empty-recommendation] paper-button {
+                padding: 0;
+            }
+        
+            .item-name {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                flex:1 1 0%;
-                -ms-flex:1 1 0%;
-             }
-             .icon,iron-icon{
-                 width:20px;
-                 height:20px;
-             }
+                flex: 1 1 0%;
+                -ms-flex: 1 1 0%;
+            }
+        
+            .icon,
+            iron-icon {
+                width: 20px;
+                height: 20px;
+            }
         </style>
         <template is="dom-if" if="[[showHumanVerification]]">
             <span class="icon">
