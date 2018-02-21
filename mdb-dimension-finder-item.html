@@ -12,7 +12,7 @@
                 padding: 5px 5px 5px 9px;
                 cursor: pointer;
                 color: var(--dimension-text-color, --mdb-secondary-text-dark);
-
+                --paper-checkbox-ink-size: 20px;
             }
 
             :host[selected] {
@@ -57,12 +57,16 @@
                 font-size: var(--mdb-font-small, 12px);
             }
 
-            .icon,
             iron-icon {
                 width: 20px;
                 height: 20px;
             }
         </style>
+        <template is="dom-if" if="[[showCheckboxView]]">
+            <template is="dom-if" if="[[showItemCheckbox]]">
+                <paper-checkbox no-ripple checked={{checked}} on-change="_checkedChanged"></paper-checkbox>
+            </template>
+        </template>
         <template is="dom-if" if="[[showHumanVerification]]">
             <span class="icon">
                 <template is="dom-if" if="[[humanVerified]]">
@@ -74,13 +78,12 @@
             </span>
         </template>
 
-        <template is="dom-if" if="[[!showHumanVerification]]">
-            <iron-icon icon="icon"></iron-icon>
-        </template>
 
         <span class="item-name" title="[[name]]">[[name]]</span>
-        <template is="dom-if" if="[[showItemCheckbox]]">
-            <paper-button toggles active={{checked}} on-change="_checkedChanged">[[recommendation]]</paper-button>
+        <template is="dom-if" if="[[!showCheckboxView]]">
+            <template is="dom-if" if="[[showItemCheckbox]]">
+                <paper-button toggles active={{checked}} on-change="_checkedChanged">[[recommendation]]</paper-button>
+            </template>
         </template>
 
         <iron-icon class="arrow" icon="icons:chevron-right"></iron-icon>
@@ -96,6 +99,11 @@
 
                 name: {
                     type: String
+                },
+
+                showCheckboxView: {
+                    type: Boolean,
+                    value: false
                 },
 
                 systemRecommended: {
