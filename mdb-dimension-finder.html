@@ -105,7 +105,10 @@ Custom property | Description | Default
     </style>
 
     <div class="header">
-      <mdb-title help-text="[[helpText]]" level="3">[[dimension]]</mdb-title>
+      <mdb-title help-text="[[helpText]]" level="3">
+        [[_getTitleText(titleDimension,dimension)]]
+      </mdb-title>
+
       <template is="dom-if" if="[[allDimensionsAllowed]]">
         <paper-checkbox hidden checked="{{showAllDimensions}}">ALL</paper-checkbox>
       </template>
@@ -116,13 +119,14 @@ Custom property | Description | Default
           <paper-radio-button name="recommendation">RECOMMENDED</paper-radio-button>
         </mdb-radio-list>
       </template>
-      <mdb-search-box show-search-controls placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]" search-results="{{_searchResults}}"></mdb-search-box>
+      <mdb-search-box show-search-controls placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]"
+        search-results="{{_searchResults}}"></mdb-search-box>
     </div>
 
     <div class="dimension-finder">
       <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]">
         <template>
-          <mdb-dimension-finder-item show-checkbox-view="[[showCheckboxView]]" id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}"
+          <mdb-dimension-finder-item show-checkbox-view="[[item.showCheckboxView]]" id="[[item.id]]" name="[[item.label]]" checked="{{item.checked}}"
             show-system-recommendation="[[item.showSystemRecommendation]]" show-human-verification="[[item.showHumanVerification]]"
             recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]" system-recommended="[[item.predictedColumns]]"
             show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
@@ -137,6 +141,11 @@ Custom property | Description | Default
       is: 'mdb-dimension-finder',
 
       properties: {
+        titleDimension: {
+          type: String,
+          value: '',
+          notify: true
+        },
         //Type of dimension
         dimension: {
           type: String
@@ -237,10 +246,33 @@ Custom property | Description | Default
           });
       },
 
+      uncheckAllItems: function () {
+        var comp = this;
+        var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
+          .forEach(function (itemElement) {
+            if (itemElement.checked) {
+              itemElement.checked = false;
+              comp.fire('dimension-checked', {
+                id: itemElement.id,
+                checked: itemElement.checked,
+                name: itemElement.name,
+                humanVerified: itemElement.humanVerified,
+                showHumanVerification: itemElement.showHumanVerification,
+                systemRecommended: itemElement.systemRecommended,
+                showSystemRecommendation: itemElement.showSystemRecommendation,
+                showItemCheckbox: itemElement.showItemCheckbox,
+                recommendation: itemElement.recommendation
+              });
+            }
+          });
+      },
+
       ready: function () {
         this.showAllDimensions = this.allDimensionsAllowed ? this.showAllDimensions : true
       },
-
+      _getTitleText: function (titleDimension, dimension) {
+        return titleDimension.length > 0 ? titleDimension : dimension;
+      },
       attached: function () {
         var that = this,
           list = this.querySelector('mdb-simple-list');
@@ -274,6 +306,7 @@ Custom property | Description | Default
         this._set_items(this.items.map(function (e) {
           e.showHumanVerification = that.showHumanVerification;
           e.showSystemRecommendation = that.showSystemRecommendation;
+          e.showCheckboxView = that.showCheckboxView;
           e.showItemCheckbox = that.showItemCheckbox;
           return e;
         }));
@@ -287,15 +320,14 @@ Custom property | Description | Default
       _sortDimension: function () {
 
         var that = this;
-        var sortBy = this.sortBy;
-        this.showAllDimensions = sortBy === 'recommendation' ? false : true;
+        this.showAllDimensions = this.allowSorting && this.sortBy === 'recommendation' ? false : true;
         var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
           return !!e.predictedColumns;
         }) : this.items));
 
-        var sorted = items.sort(function (a, b) {
+        var sorted = this.allowSorting ? items.sort(function (a, b) {
           return (b.predictedColumns || 0) - (a.predictedColumns || 0);
-        });
+        }) : items;
 
         this.set('_searchResults', JSON.parse(JSON.stringify(sorted)));
         this.emptyMessage = this.dataLoaded ? !sorted.length ? 'No ' + (!this.showAllDimensions ? 'system recommended ' : '') + this.dimension + 's found.' : '' : '';
