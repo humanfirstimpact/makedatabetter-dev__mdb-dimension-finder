@@ -235,6 +235,10 @@ Custom property | Description | Default
         }
       },
 
+      listeners: {
+        'dimension-checked': 'setCheckedData'
+      },
+
       uncheckItems: function (itemIds) {
         if ((itemIds || []).length == 0)
           return;
@@ -299,7 +303,9 @@ Custom property | Description | Default
           });
         }
       },
-
+      setCheckedData: function (params) {
+        this._items.find(function (item) { return item.id == params.detail.id }).checked = params.detail.checked;
+      },
       _itemsChanged: function () {
         var that = this;
         this.set('selectedDimension', undefined);
@@ -308,6 +314,7 @@ Custom property | Description | Default
           e.showSystemRecommendation = that.showSystemRecommendation;
           e.showCheckboxView = that.showCheckboxView;
           e.showItemCheckbox = that.showItemCheckbox;
+          e.checked = false;
           return e;
         }));
         this._sortDimension();
