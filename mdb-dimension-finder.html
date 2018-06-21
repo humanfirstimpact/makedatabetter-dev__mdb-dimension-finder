@@ -243,9 +243,13 @@ Custom property | Description | Default
         if ((itemIds || []).length == 0)
           return;
 
+        itemIds = itemIds.map(function(_itemId){
+          return (_itemId || '').toString();
+        });
+
         var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
           .forEach(function (itemElement) {
-            if (itemIds.indexOf(itemElement.id) >= 0)
+            if (itemIds.indexOf((itemElement.id || '').toString()) >= 0)
               itemElement.checked = false;
           });
       },
