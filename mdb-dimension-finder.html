@@ -119,8 +119,11 @@ Custom property | Description | Default
           <paper-radio-button name="recommendation">RECOMMENDED</paper-radio-button>
         </mdb-radio-list>
       </template>
-      <mdb-search-box show-search-controls placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]"
-        search-results="{{_searchResults}}"></mdb-search-box>
+      
+      <template is="dom-if" if="[[!hideSearch]]">
+        <mdb-search-box show-search-controls placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]"
+          search-results="{{_searchResults}}"></mdb-search-box>
+      </template>
     </div>
 
     <div class="dimension-finder">
@@ -163,6 +166,11 @@ Custom property | Description | Default
         },
 
         allowSorting: {
+          type: Boolean,
+          value: false
+        },
+
+        hideSearch: {
           type: Boolean,
           value: false
         },
