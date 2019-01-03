@@ -298,13 +298,14 @@ Custom property | Description | Default
             var items = that.querySelectorAll('mdb-dimension-finder-item');
 
             if (items && items.length > 0) {
-              items.forEach(function (item, index) {
-                if (index == selected) {
+              for(var i=0; i<items.length; i++){
+                var item = items[i];
+                if (i == selected) {
                   Polymer.dom(item).setAttribute('selected', true);
                 } else {
                   Polymer.dom(item).removeAttribute('selected');
                 }
-              });
+              }
             }
             that.selectedDimension = this.selectedItem;
           });
