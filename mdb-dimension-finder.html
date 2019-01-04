@@ -255,18 +255,20 @@ Custom property | Description | Default
           return (_itemId || '').toString();
         });
 
-        var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
-          .forEach(function (itemElement) {
-            if (itemIds.indexOf((itemElement.id || '').toString()) >= 0)
+        var itemElements = this.querySelectorAll('mdb-dimension-finder-item');
+        for(var i=0; i<itemElements.length; i++){
+          var itemElement = itemElements[i];
+          if (itemIds.indexOf((itemElement.id || '').toString()) >= 0)
               itemElement.checked = false;
-          });
+        }
       },
 
       uncheckAllItems: function () {
         var comp = this;
-        var itemElements = this.querySelectorAll('mdb-dimension-finder-item')
-          .forEach(function (itemElement) {
-            if (itemElement.checked) {
+        var itemElements = this.querySelectorAll('mdb-dimension-finder-item');
+        for(var i=0; i<itemElements.length; i++){
+          var itemElement = itemElements[i];
+          if (itemElement.checked) {
               itemElement.checked = false;
               comp.fire('dimension-checked', {
                 id: itemElement.id,
@@ -280,7 +282,7 @@ Custom property | Description | Default
                 recommendation: itemElement.recommendation
               });
             }
-          });
+        }
       },
 
       ready: function () {
