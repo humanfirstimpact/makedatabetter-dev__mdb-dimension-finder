@@ -344,7 +344,7 @@ Custom property | Description | Default
         var that = this;
         this.showAllDimensions = this.allowSorting && this.sortBy === 'recommendation' ? false : true;
         var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
-          return !!e.predictedColumns;
+          return e.predictedColumns > 0 || e.confirmedColumns > 0;
         }) : this.items));
 
         var sorted = this.allowSorting ? items.sort(function (a, b) {
