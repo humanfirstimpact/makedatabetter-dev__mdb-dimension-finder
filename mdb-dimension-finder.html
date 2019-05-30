@@ -116,7 +116,7 @@ Custom property | Description | Default
       <template is="dom-if" if="[[allowSorting]]">
         <mdb-radio-list size="small" selected="{{sortBy}}">
           <paper-radio-button name="alphabetically">ALL</paper-radio-button>
-          <paper-radio-button name="recommendation">RECOMMENDED</paper-radio-button>
+          <paper-radio-button name="recommendation">[[recommendedTitle]]</paper-radio-button>
         </mdb-radio-list>
       </template>
       
@@ -240,6 +240,11 @@ Custom property | Description | Default
         dataLoaded: {
           type: Boolean,
           value: false
+        },
+
+        recommendedTitle: {
+          type: String,
+          value: 'RECOMMENDED'
         }
       },
 
@@ -344,6 +349,9 @@ Custom property | Description | Default
         var that = this;
         this.showAllDimensions = this.allowSorting && this.sortBy === 'recommendation' ? false : true;
         var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
+          if(e.hasOwnProperty('isRecommended'))
+            return e.isRecommended;
+
           return e.predictedColumns > 0 || e.confirmedColumns > 0;
         }) : this.items));
 
