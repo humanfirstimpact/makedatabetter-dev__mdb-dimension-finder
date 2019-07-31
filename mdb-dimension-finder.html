@@ -105,7 +105,7 @@ Custom property | Description | Default
     </style>
 
     <div class="header">
-      <mdb-title help-text="[[helpText]]" level="3">
+      <mdb-title help-text="[[helpText]]" level="3" help-text-position='[[helpTextPosition]]'>
         [[_getTitleText(titleDimension,dimension)]]
       </mdb-title>
 
@@ -192,6 +192,11 @@ Custom property | Description | Default
 
         helpText: {
           type: String
+        },
+
+        helpTextPosition: {
+          type: String,
+          value: 'right'
         },
 
         height: {
