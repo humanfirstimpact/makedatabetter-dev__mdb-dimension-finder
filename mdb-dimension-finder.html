@@ -334,7 +334,7 @@ Custom property | Description | Default
       _itemsChanged: function () {
         var that = this;
         this.set('selectedDimension', undefined);
-        this._set_items(this.items.map(function (e) {
+        this._set_items((this.items || []).map(function (e) {
           e.showHumanVerification = that.showHumanVerification;
           e.showSystemRecommendation = that.showSystemRecommendation;
           e.showCheckboxView = that.showCheckboxView;
@@ -353,12 +353,12 @@ Custom property | Description | Default
 
         var that = this;
         this.showAllDimensions = this.allowSorting && this.sortBy === 'recommendation' ? false : true;
-        var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? this.items.filter(function (e) {
+        var items = JSON.parse(JSON.stringify(!this.showAllDimensions ? (this.items || []).filter(function (e) {
           if(e.hasOwnProperty('isRecommended'))
             return e.isRecommended;
 
           return e.predictedColumns > 0 || e.confirmedColumns > 0;
-        }) : this.items));
+        }) : this.items || []));
 
         var sorted = this.allowSorting ? items.sort(function (a, b) {
           return (b.predictedColumns || 0) - (a.predictedColumns || 0);
